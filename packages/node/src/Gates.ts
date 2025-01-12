@@ -49,6 +49,7 @@ interface IGates {
 export class Gates extends CoreGates implements IGates {
   store?: GatesResponse;
   user?: any = {};
+  options?: IGatesOptions | undefined;
 
   constructor(pubKey: string, options?: IGatesOptions) {
     super(pubKey, options);
@@ -56,22 +57,18 @@ export class Gates extends CoreGates implements IGates {
     this.user = {
       id: this.options?.appUserId ?? undefined,
     };
+
+    this.options = options;
   }
 
   async init(): Promise<void> {
-    const [storedKnobs, storedExperiments] = await Promise.all([
-      GateStorage.loadGates("knobs"),
-      GateStorage.loadGates("experiments"),
-    ]);
+    const store = await GateStorage.loadAll();
 
-    const hasLocalData = storedKnobs || storedExperiments;
+    const hasLocalData = store["knobs"] || store["experiments"];
     const refresh = this.options?.alwaysFetch ?? true;
 
     if (hasLocalData && !refresh) {
-      this.store = {
-        knobs: storedKnobs ?? {},
-        experiments: storedExperiments ?? {},
-      };
+      this.store = store;
       return;
     }
 
@@ -99,6 +96,8 @@ export class Gates extends CoreGates implements IGates {
       id,
       attributes,
     };
+
+    await this.sync();
   }
 
   async sync() {
@@ -107,12 +106,19 @@ export class Gates extends CoreGates implements IGates {
       "GET"
     );
 
-    this.store = request;
+    const currentStore = await GateStorage.loadAll();
 
-    await Promise.all([
-      GateStorage.saveGates("knobs", request.knobs),
-      GateStorage.saveGates("experiments", request.experiments),
-    ]);
+    // Todo: implement deep equality check.
+    const shouldReplace =
+      JSON.stringify(currentStore) !== JSON.stringify(request);
+
+    if (shouldReplace) {
+      this.store = request;
+      await GateStorage.saveGates("knobs", request.knobs);
+      await GateStorage.saveGates("experiments", request.experiments);
+    } else {
+      this.store = currentStore;
+    }
   }
 
   getUser() {

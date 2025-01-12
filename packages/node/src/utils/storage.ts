@@ -1,12 +1,14 @@
 import fs from "fs/promises";
 import path from "path";
 
-const STORAGE_DIR = "./.cache/gates";
+const STORAGE_DIR = "./.cache";
+const STORAGE_FILE = "gates.json";
 
-interface StoredGate {
-  id: string;
-  value: any;
-}
+type ExpectedStores = "knobs" | "experiments";
+
+type StoreData = {
+  [storeName in ExpectedStores]?: Record<string, boolean>;
+};
 
 export class GateStorage {
   private static async ensureStorageDir() {
@@ -15,59 +17,67 @@ export class GateStorage {
     } catch (error) {}
   }
 
-  static async saveGates(storeName: string, gates?: Record<string, boolean>) {
-    if (!gates) {
-      return;
+  private static async readStorageFile(): Promise<StoreData> {
+    try {
+      const data = await fs.readFile(
+        path.join(STORAGE_DIR, STORAGE_FILE),
+        "utf-8"
+      );
+      return JSON.parse(data);
+    } catch (error: unknown) {
+      return {};
     }
+  }
 
-    await this.ensureStorageDir();
-
-    const storedGates = Object.entries(gates).map(([key, value]) => ({
-      id: key,
-      value,
-    }));
-
+  private static async writeStorageFile(data: StoreData) {
     await fs.writeFile(
-      path.join(STORAGE_DIR, `${storeName}.json`),
-      JSON.stringify(storedGates)
+      path.join(STORAGE_DIR, STORAGE_FILE),
+      JSON.stringify(data, null, 2)
     );
   }
 
+  static async saveGates(
+    storeName: ExpectedStores,
+    gates?: Record<string, boolean>
+  ) {
+    if (!gates) return;
+
+    await this.ensureStorageDir();
+    const data = (await this.readStorageFile()) ?? {};
+
+    data[storeName] = gates;
+
+    await this.writeStorageFile({ ...data });
+  }
+
   static async loadGates(
-    storeName: string
-  ): Promise<Record<string, any> | null> {
+    storeName: ExpectedStores
+  ): Promise<Record<string, boolean> | null> {
     try {
       await this.ensureStorageDir();
-      const data = await fs.readFile(
-        path.join(STORAGE_DIR, `${storeName}.json`),
-        "utf-8"
-      );
-      const gates = JSON.parse(data) as StoredGate[];
-
-      return gates.reduce(
-        (acc, gate) => ({
-          ...acc,
-          [gate.id]: gate.value,
-        }),
-        {}
-      );
+      const data = await this.readStorageFile();
+      return data[storeName] || null;
     } catch (error) {
       return null;
     }
   }
 
-  static async cleanup(storeName: string) {
+  static async loadAll(): Promise<StoreData> {
     try {
-      const data = await fs.readFile(
-        path.join(STORAGE_DIR, `${storeName}.json`),
-        "utf-8"
-      );
-      const gates = JSON.parse(data) as StoredGate[];
+      await this.ensureStorageDir();
+      const data = await this.readStorageFile();
+      return data;
+    } catch (error) {
+      return {};
+    }
+  }
 
-      await fs.writeFile(
-        path.join(STORAGE_DIR, `${storeName}.json`),
-        JSON.stringify(gates)
-      );
+  static async cleanup(storeName: ExpectedStores) {
+    try {
+      const data = await this.readStorageFile();
+      if (data[storeName]) {
+        await this.writeStorageFile(data);
+      }
     } catch (error) {
       // File doesn't exist or other error
     }
