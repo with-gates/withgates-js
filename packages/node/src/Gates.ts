@@ -49,6 +49,7 @@ interface IGates {
 export class Gates extends CoreGates implements IGates {
   store?: GatesResponse;
   user?: any = {};
+  options?: IGatesOptions | undefined;
 
   constructor(pubKey: string, options?: IGatesOptions) {
     super(pubKey, options);
@@ -56,6 +57,8 @@ export class Gates extends CoreGates implements IGates {
     this.user = {
       id: this.options?.appUserId ?? undefined,
     };
+
+    this.options = options;
   }
 
   async init(): Promise<void> {
@@ -99,6 +102,8 @@ export class Gates extends CoreGates implements IGates {
       id,
       attributes,
     };
+
+    await this.sync();
   }
 
   async sync() {
@@ -109,10 +114,8 @@ export class Gates extends CoreGates implements IGates {
 
     this.store = request;
 
-    await Promise.all([
-      GateStorage.saveGates("knobs", request.knobs),
-      GateStorage.saveGates("experiments", request.experiments),
-    ]);
+    await GateStorage.saveGates("knobs", request.knobs);
+    await GateStorage.saveGates("experiments", request.experiments);
   }
 
   getUser() {
