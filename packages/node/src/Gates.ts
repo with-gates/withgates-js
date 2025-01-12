@@ -62,19 +62,13 @@ export class Gates extends CoreGates implements IGates {
   }
 
   async init(): Promise<void> {
-    const [storedKnobs, storedExperiments] = await Promise.all([
-      GateStorage.loadGates("knobs"),
-      GateStorage.loadGates("experiments"),
-    ]);
+    const store = await GateStorage.loadAll();
 
-    const hasLocalData = storedKnobs || storedExperiments;
+    const hasLocalData = store["knobs"] || store["experiments"];
     const refresh = this.options?.alwaysFetch ?? true;
 
     if (hasLocalData && !refresh) {
-      this.store = {
-        knobs: storedKnobs ?? {},
-        experiments: storedExperiments ?? {},
-      };
+      this.store = store;
       return;
     }
 
@@ -112,10 +106,19 @@ export class Gates extends CoreGates implements IGates {
       "GET"
     );
 
-    this.store = request;
+    const currentStore = await GateStorage.loadAll();
 
-    await GateStorage.saveGates("knobs", request.knobs);
-    await GateStorage.saveGates("experiments", request.experiments);
+    // Todo: implement deep equality check.
+    const shouldReplace =
+      JSON.stringify(currentStore) !== JSON.stringify(request);
+
+    if (shouldReplace) {
+      this.store = request;
+      await GateStorage.saveGates("knobs", request.knobs);
+      await GateStorage.saveGates("experiments", request.experiments);
+    } else {
+      this.store = currentStore;
+    }
   }
 
   getUser() {

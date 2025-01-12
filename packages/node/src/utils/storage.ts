@@ -4,14 +4,11 @@ import path from "path";
 const STORAGE_DIR = "./.cache";
 const STORAGE_FILE = "gates.json";
 
-interface StoredGate {
-  id: string;
-  value: any;
-}
+type ExpectedStores = "knobs" | "experiments";
 
-interface StoreData {
-  [storeName: string]: StoredGate[];
-}
+type StoreData = {
+  [storeName in ExpectedStores]?: Record<string, boolean>;
+};
 
 export class GateStorage {
   private static async ensureStorageDir() {
@@ -27,8 +24,7 @@ export class GateStorage {
         "utf-8"
       );
       return JSON.parse(data);
-    } catch (error) {
-      console.log(error);
+    } catch (error: unknown) {
       return {};
     }
   }
@@ -40,41 +36,43 @@ export class GateStorage {
     );
   }
 
-  static async saveGates(storeName: string, gates?: Record<string, boolean>) {
+  static async saveGates(
+    storeName: ExpectedStores,
+    gates?: Record<string, boolean>
+  ) {
     if (!gates) return;
 
     await this.ensureStorageDir();
     const data = (await this.readStorageFile()) ?? {};
 
-    data[storeName] = Object.entries(gates).map(([key, value]) => ({
-      id: key,
-      value,
-    }));
+    data[storeName] = gates;
 
     await this.writeStorageFile({ ...data });
   }
 
   static async loadGates(
-    storeName: string
-  ): Promise<Record<string, any> | null> {
+    storeName: ExpectedStores
+  ): Promise<Record<string, boolean> | null> {
     try {
       await this.ensureStorageDir();
       const data = await this.readStorageFile();
-      const gates = data[storeName] || [];
-
-      return gates.reduce(
-        (acc, gate) => ({
-          ...acc,
-          [gate.id]: gate.value,
-        }),
-        {}
-      );
+      return data[storeName] || null;
     } catch (error) {
       return null;
     }
   }
 
-  static async cleanup(storeName: string) {
+  static async loadAll(): Promise<StoreData> {
+    try {
+      await this.ensureStorageDir();
+      const data = await this.readStorageFile();
+      return data;
+    } catch (error) {
+      return {};
+    }
+  }
+
+  static async cleanup(storeName: ExpectedStores) {
     try {
       const data = await this.readStorageFile();
       if (data[storeName]) {
