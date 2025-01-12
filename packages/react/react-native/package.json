@@ -1,0 +1,67 @@
+{
+  "name": "@withgates/react-native",
+  "version": "1.0.0-alpha.1",
+  "description": "React Native utilities for WithGates",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "types/index.d.ts",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/with-gates/withgates-react.git",
+    "directory": "packages/react/react-native"
+  },
+  "homepage": "https://github.com/with-gates/withgates-react/tree/main/packages/react/react-native",
+  "keywords": [
+    "react-native",
+    "withgates",
+    "feature-flags",
+    "ab-testing"
+  ],
+  "author": "WithGates",
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "watch": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "publish": "npm run build && npm publish --access public"
+  },
+  "dependencies": {
+    "crypto-js": "^4.2.0",
+    "react-native-mmkv": "3.0.0",
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-native": "^0.73.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.2.0",
+    "prettier-plugin-organize-imports": "^3.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.6.3"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "@withgates/core-js": "*"
+  }
+}
