@@ -1,6 +1,6 @@
 {
   "name": "@withgates/node",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "Node.js SDK for WithGates",
   "main": "dist/index.js",
   "module": "dist/index.js",
