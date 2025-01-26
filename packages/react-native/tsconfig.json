@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2018",
-    "module": "ESNext",
-    "lib": ["ESNext"],
+    "module": "esnext",
+    "lib": ["DOM", "DOM.Iterable", "esnext"],
     "declaration": true,
     "declarationDir": "types",
     "moduleResolution": "bundler",
+    "jsx": "react",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
