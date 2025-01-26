@@ -1,8 +1,6 @@
-import { MMKV } from "react-native-mmkv";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const storage = new MMKV({
-  id: "gates-store",
-});
+const GATES_SYMBOL = "withgates";
 
 const GATE_TTL = 24 * 60 * 60 * 1000;
 
@@ -13,6 +11,10 @@ export interface StoredGate {
 }
 
 export class GateStorage {
+  private static getKey(storeName: string): string {
+    return `${GATES_SYMBOL}:${storeName}`;
+  }
+
   static async saveGates(storeName: string, gates?: Record<string, boolean>) {
     if (!gates) {
       return;
@@ -25,13 +27,11 @@ export class GateStorage {
       timestamp,
     }));
 
-    storage.set(`${storeName}`, JSON.stringify(storedGates));
+    await AsyncStorage.setItem(this.getKey(storeName), JSON.stringify(storedGates));
   }
 
-  static async loadGates(
-    storeName: string
-  ): Promise<Record<string, any> | null> {
-    const storedData = storage.getString(`${storeName}`);
+  static async loadGates(storeName: string): Promise<Record<string, any> | null> {
+    const storedData = await AsyncStorage.getItem(this.getKey(storeName));
     if (!storedData) {
       return null;
     }
@@ -54,7 +54,7 @@ export class GateStorage {
   }
 
   static async cleanup(storeName: string) {
-    const storedData = storage.getString(`${storeName}`);
+    const storedData = await AsyncStorage.getItem(this.getKey(storeName));
     if (!storedData) {
       return;
     }
@@ -63,7 +63,7 @@ export class GateStorage {
     const now = Date.now();
     const validGates = gates.filter((g) => now - g.timestamp < GATE_TTL);
 
-    storage.set(`${storeName}`, JSON.stringify(validGates));
+    await AsyncStorage.setItem(this.getKey(storeName), JSON.stringify(validGates));
   }
 
   static async cleanupAll() {

@@ -12,10 +12,12 @@
     "lint": "expo lint"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "1.23.1",
     "expo": "~52.0.27",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-native": "0.76.6"
+    "react-native": "0.76.6",
+    "@withgates/react-native": "file:.."
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

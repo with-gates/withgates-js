@@ -43,8 +43,8 @@
     "publish": "npm run build && npm publish --access public"
   },
   "dependencies": {
+    "@withgates/core-js": "workspace:*",
     "crypto-js": "^4.2.0",
-    "react-native-mmkv": "3.0.0",
     "react": "^18.3.1"
   },
   "devDependencies": {
@@ -60,8 +60,8 @@
     "typescript": "^5.6.3"
   },
   "peerDependencies": {
+    "@react-native-async-storage/async-storage": "*",
     "react": "*",
-    "react-native": "*",
-    "@withgates/core-js": "*"
+    "react-native": "*"
   }
 }

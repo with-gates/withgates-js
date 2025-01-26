@@ -1,28 +1,17 @@
-import { registerRootComponent } from 'expo'
-import React from 'react'
-import {
-  View,
-  Text,
-  StyleSheet,
-} from 'react-native'
+import Gates, { GateProvider } from '@withgates/react-native';
+import { StrictMode } from 'react';
+import {App} from './App';
+import { registerRootComponent } from 'expo';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'black',
-  },
-})
+export const gates = new Gates('<YOUR_GATES_API_KEY>', {
+  appUserId: '00000-22222',
+  alwaysFetch: false,
+});
 
-export const App = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.buttonText}>Hello World!</Text>
-    </View>
-  )
-}
-
-registerRootComponent(App)
+registerRootComponent(() => 
+  <StrictMode>
+    <GateProvider gates={gates}>
+      <App />
+    </GateProvider>
+  </StrictMode>
+);
