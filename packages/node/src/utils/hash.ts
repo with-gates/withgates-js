@@ -5,6 +5,10 @@ import crypto from "crypto";
  * @param value - The string to hash
  * @returns A 6-character hash string
  */
-export function hashKey(value: string): string {
-  return crypto.createHash("md5").update(value).digest("hex").slice(0, 6);
+export function hashKey(value: string, salt: string): string {
+  return crypto
+    .createHash("md5")
+    .update(salt + value)
+    .digest("hex")
+    .slice(0, 6);
 }

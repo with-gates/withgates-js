@@ -126,12 +126,12 @@ export class Gates extends CoreGates implements IGates {
   }
 
   isEnabled(key: string): boolean {
-    const hashedKey = hashKey(key);
+    const hashedKey = hashKey(key, this.salt);
     return this.store?.knobs?.[hashedKey] ?? false;
   }
 
   isInExperiment(key: string): boolean {
-    const hashedKey = hashKey(key);
+    const hashedKey = hashKey(key, this.salt);
     return this.store?.experiments?.[hashedKey] ?? false;
   }
 }
