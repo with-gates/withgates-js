@@ -8,6 +8,9 @@ export interface IGatesOptions {
   appUserId?: string;
   /** Force fetch fresh data instead of using cache */
   alwaysFetch?: boolean;
+
+  /** Optional salt value used for hashing */
+  salt?: string;
 }
 
 /**
@@ -52,10 +55,12 @@ export class Gates implements IGates {
   pubKey: string;
   options?: IGatesOptions;
   private static instance: IGates;
+  salt!: string;
 
   constructor(pubKey: string, options?: IGatesOptions) {
     this.pubKey = pubKey;
     this.options = options;
+    this.salt = options?.salt ?? "gates";
   }
 
   getInstance(pubKey: string, options?: IGatesOptions): IGates {
@@ -75,6 +80,7 @@ export class Gates implements IGates {
       headers: {
         Authorization: `Bearer ${this.pubKey}`,
         "Content-Type": "application/json",
+        "x-fg-s": this.salt,
       },
       method,
       body: data ? JSON.stringify(data) : undefined,
