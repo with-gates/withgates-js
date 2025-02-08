@@ -29,9 +29,9 @@ export function useExperiment(key: string, defaultValue = false): boolean {
   const { gates } = useContext(GateContext) ?? {};
   const xp = gates?.store?.experiments ?? {};
 
-  const hashedKey = createHash(key);
+  const hashedKey = gates?.salt ? createHash(key, gates.salt) : undefined;
 
-  if (xp[hashedKey]) {
+  if (hashedKey && xp[hashedKey]) {
     return xp[hashedKey];
   }
 
