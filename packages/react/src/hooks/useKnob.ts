@@ -25,7 +25,7 @@ export function useKnob(key: string, defaultValue = false): boolean {
   const { gates } = useContext(GateContext) ?? {};
   const knobs = gates?.store?.knobs ?? {};
 
-  const hashedKey = createHash(key);
+  const hashedKey = createHash(key, String(gates?.salt));
 
   if (knobs[hashedKey]) {
     return knobs[hashedKey];

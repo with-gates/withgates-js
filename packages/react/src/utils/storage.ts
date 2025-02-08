@@ -105,8 +105,20 @@ export class GateStorage {
 
   // Cleanup all stale entries across all stores
   static async cleanupAll() {
-    for (const store of STORES) {
-      await this.cleanup(store);
-    }
+    await Promise.all(STORES.map((store) => this.cleanup(store)));
+  }
+
+  static async resetStores() {
+    const db = await openDB(DB_NAME, DB_VERSION);
+    const tx = db.transaction(STORES, 'readwrite');
+
+    await Promise.all(
+      STORES.map(async (storeName) => {
+        const store = tx.objectStore(storeName);
+        await store.clear();
+      })
+    );
+
+    await tx.done;
   }
 }

@@ -7,6 +7,7 @@ import './index.css';
 export const gates = new Gates('<YOUR_GATES_API_KEY>', {
   appUserId: '00000-22222',
   alwaysFetch: false,
+  salt: '<YOUR_SECRET_SALT>',
 });
 
 createRoot(document.getElementById('root')!).render(

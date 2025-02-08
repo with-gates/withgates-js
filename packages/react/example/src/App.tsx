@@ -6,6 +6,14 @@ import viteLogo from '/vite.svg';
 import { KnobGuard, useKnob } from '@withgates/react-web';
 import { gates } from './main';
 
+const NewComponent = ({ text }: { text: string }) => {
+  return <p>{text}</p>;
+};
+
+const OldComponent = ({ text }: { text: string }) => {
+  return <p>{text}</p>;
+};
+
 function App() {
   const [count, setCount] = useState(0);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -47,10 +55,11 @@ function App() {
       <h1>Vite + React</h1>
 
       <div className="card">
-        <KnobGuard value="feature-flag-2" fallback={<p>Feature is disabled</p>}>
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </button>
+        <KnobGuard
+          value="user_attributes_management"
+          fallback={<OldComponent text="Old Component" />}
+        >
+          <NewComponent text="New Component" />
         </KnobGuard>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR

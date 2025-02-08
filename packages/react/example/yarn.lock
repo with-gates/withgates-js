@@ -662,15 +662,6 @@
     "@types/babel__core" "^7.20.5"
     react-refresh "^0.14.2"
 
-"@withgates/react-web@*":
-  version "1.0.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/@withgates/react-web/-/react-web-1.0.0-alpha.7.tgz#3c7da6b550f5e05b847c5573e9c6f97d19eff1eb"
-  integrity sha512-la33MbhOicE1xcbgiHjdzCJeWE3Y1eEjzqDX0cuPTsvD12iCA9wX2T0sUgHxJ2m5zNBY0MZhXjEUWV0gJmRkjg==
-  dependencies:
-    crypto-js "^4.2.0"
-    idb "^8.0.0"
-    react "^18.3.1"
-
 acorn-jsx@^5.3.2:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz#7ed5bb55908b3b2f1bc55c6af1653bada7f07937"
@@ -788,11 +779,6 @@ cross-spawn@^7.0.5:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
-
-crypto-js@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
-  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
 
 csstype@^3.0.2:
   version "3.1.3"
@@ -1072,11 +1058,6 @@ has-flag@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-4.0.0.tgz#944771fd9c81c81265c4d6941860da06bb59479b"
   integrity sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==
-
-idb@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/idb/-/idb-8.0.0.tgz#33d7ed894ed36e23bcb542fb701ad579bfaad41f"
-  integrity sha512-l//qvlAKGmQO31Qn7xdzagVPPaHTxXx199MhrAFuVBTPqydcPYBWjkrbv4Y0ktB+GmWOiwHl237UUOrLmQxLvw==
 
 ignore@^5.2.0, ignore@^5.3.1:
   version "5.3.2"

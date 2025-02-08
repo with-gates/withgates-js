@@ -91,11 +91,13 @@ export class Gates extends CoreGates implements IGates {
 
   async sync() {
     const request = await this.makeRequest<GatesResponse>(
-      `sdk/gates?keys=knobs&experiments&userId=${this.user.id}`,
+      `sdk/gates?keys=knobs,experiments&userId=${this.user.id}`,
       'GET'
     );
 
     this.store = request;
+
+    await GateStorage.resetStores();
 
     await Promise.all([
       GateStorage.saveGates('knobs', request.knobs),
