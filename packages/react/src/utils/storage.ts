@@ -112,7 +112,7 @@ export class GateStorage {
     const db = await openDB(DB_NAME, DB_VERSION);
     const tx = db.transaction(STORES, 'readwrite');
 
-    await Promise.all(
+    await Promise. allSettled(
       STORES.map(async (storeName) => {
         const store = tx.objectStore(storeName);
         await store.clear();
