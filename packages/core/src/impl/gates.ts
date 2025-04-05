@@ -1,4 +1,4 @@
-export const API = "https://with-gates.fly.dev";
+export const API = "https://with-gates.fly.dev/v1.0.0";
 
 /**
  * Configuration options for Gates instance
