@@ -1,6 +1,6 @@
 {
   "name": "@withgates/core-js",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Core shared utilities for WithGates",
   "main": "dist/index.js",
   "module": "dist/index.js",
