@@ -1,2 +1,8 @@
 export { Gates } from "./Gates";
-export { hashKey } from "./utils/hash";
+
+export type {
+  ExperimentValidationResponse,
+  KnobValidationResponse,
+  BulkValidationRequest,
+  BulkValidationResponse,
+} from "./Gates";
